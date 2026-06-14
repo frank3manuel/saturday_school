@@ -1,0 +1,48 @@
+<% content_for :title, "#{@cohort.name} · Progress" %>
+
+<main class="progress cohort-progress">
+  <nav class="breadcrumb">
+    <%= link_to "← #{@cohort.name}", cohort_path(@cohort) %>
+  </nav>
+
+  <header>
+    <h1>Class progress</h1>
+    <%# Honest framing (plan §3): NO "% mastered" headline. What's stuck took
+        real elapsed time — we show the stacked stage distribution only. %>
+    <p class="muted">
+      Honest progress across the lessons you've assigned. There is no single
+      "percent mastered" — durability is shown by how much has survived a real
+      gap (Maturing and Durable), which takes time.
+    </p>
+  </header>
+
+  <% if @report.students.empty? || @report.items.empty? %>
+    <p class="muted">
+      Once you've enrolled students and assigned at least one lesson, their honest
+      stage distribution will appear here.
+    </p>
+  <% else %>
+    <%= render "progress/legend" %>
+
+    <section aria-labelledby="overall-heading">
+      <h2 id="overall-heading">Whole class</h2>
+      <%= render "progress/distribution", distribution: @report.overall, primary: true %>
+    </section>
+
+    <section aria-labelledby="by-item-heading">
+      <h2 id="by-item-heading">By assigned item</h2>
+      <% @report.by_item.each do |dist| %>
+        <%= render "progress/distribution", distribution: dist, primary: false %>
+      <% end %>
+    </section>
+
+    <section aria-labelledby="by-student-heading">
+      <h2 id="by-student-heading">By student</h2>
+      <% @report.by_student.each do |dist| %>
+        <%= render "progress/distribution", distribution: dist, primary: false %>
+      <% end %>
+    </section>
+  <% end %>
+</main>
+
+<%= render "shared/tabbar", active: :today %>

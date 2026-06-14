@@ -1,0 +1,41 @@
+<% content_for :title, "Admin · Audit log" %>
+
+<main class="admin">
+  <nav class="breadcrumb">
+    <%= link_to "← Accounts", admin_users_path %>
+  </nav>
+
+  <header>
+    <h1>Audit log</h1>
+    <p class="muted">Append-only record of admin role changes and account deletions.</p>
+  </header>
+
+  <% if @audit_events.any? %>
+    <table class="admin__audit-log">
+      <thead>
+        <tr>
+          <th scope="col">When</th>
+          <th scope="col">Action</th>
+          <th scope="col">Target</th>
+          <th scope="col">Actor</th>
+          <th scope="col">Details</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @audit_events.each do |event| %>
+          <tr>
+            <td><time datetime="<%= event.created_at.iso8601 %>"><%= event.created_at.to_fs(:short) %></time></td>
+            <td><%= event.action.humanize %></td>
+            <td><%= event.target_email || "(deleted)" %></td>
+            <td><%= event.actor&.email_address || "(removed)" %></td>
+            <td><%= event.detail_hash.map { |k, v| "#{k}: #{v}" }.join(", ") %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p class="muted">No audit events yet.</p>
+  <% end %>
+</main>
+
+<%= render "shared/tabbar", active: :today %>

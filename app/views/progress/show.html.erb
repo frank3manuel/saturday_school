@@ -1,0 +1,123 @@
+<% content_for :title, "Progress" %>
+<% content_for :nav_active, "progress" %>
+
+<main class="progress">
+  <header class="progress__header">
+    <h1>Progress</h1>
+    <p class="muted">
+      An honest picture of what's stuck. There's no single "mastered" score —
+      real learning is shown by what survives a gap, and that takes time.
+    </p>
+  </header>
+
+  <% if @total_items.zero? %>
+    <section class="progress__empty" aria-live="polite">
+      <p class="empty">
+        Nothing to chart yet. Add a few items in the
+        <%= link_to "Library", library_path %> and start reviewing — stages
+        appear as items survive real gaps between reviews.
+      </p>
+    </section>
+  <% else %>
+    <%# --- Honest headline: what has truly stuck (Maturing + Durable) ------ %>
+    <section class="panel" aria-labelledby="truly-learned-heading">
+      <h2 id="truly-learned-heading">What has truly stuck</h2>
+      <p class="progress__headline">
+        <strong class="progress__big"><%= @overall.truly_learned %></strong>
+        of <%= @total_items %>
+        <%= "item".pluralize(@total_items) %> have survived a gap of a week or
+        more.
+      </p>
+      <p class="muted small">
+        These are the Maturing and Durable items below. By design they took real
+        elapsed time to earn — you can't shortcut them in one session.
+      </p>
+    </section>
+
+    <%# --- Stage-distribution bars: overall, then per subject ------------- %>
+    <section class="panel" aria-labelledby="stages-heading">
+      <h2 id="stages-heading">Stage distribution</h2>
+
+      <%= render "progress/legend" %>
+
+      <%= render "progress/distribution", distribution: @overall, primary: true %>
+
+      <% if @by_subject.size > 1 %>
+        <h3 class="progress__subhead">By subject</h3>
+        <% @by_subject.each do |distribution| %>
+          <%= render "progress/distribution", distribution: distribution, primary: false %>
+        <% end %>
+      <% end %>
+    </section>
+
+    <%# --- Durability stats: survived ≥1d / ≥1 week / ≥60d ---------------- %>
+    <section class="panel" aria-labelledby="durability-heading">
+      <h2 id="durability-heading">Durability</h2>
+      <p class="muted small">
+        How many items have been recalled after a real gap. The longer the gap
+        survived, the more durable the memory.
+      </p>
+      <dl class="durability">
+        <div class="durability__stat">
+          <dt>Survived ≥ 1 day</dt>
+          <dd><%= @durability[:day] %></dd>
+        </div>
+        <div class="durability__stat">
+          <dt>Survived ≥ 1 week</dt>
+          <dd><%= @durability[:week] %></dd>
+        </div>
+        <div class="durability__stat">
+          <dt>Survived ≥ 60 days</dt>
+          <dd><%= @durability[:month] %></dd>
+        </div>
+      </dl>
+    </section>
+
+    <%# --- Due-forecast calendar ------------------------------------------ %>
+    <section class="panel" aria-labelledby="forecast-heading">
+      <h2 id="forecast-heading">Coming up</h2>
+      <% if @overdue_count.positive? %>
+        <p class="forecast__overdue">
+          <strong><%= pluralize(@overdue_count, "item") %></strong>
+          due now.
+          <%= button_to "Start review", quiz_sessions_path, class: "btn btn--small" %>
+        </p>
+      <% end %>
+      <p class="muted small">Items coming due over the next two weeks.</p>
+      <ol class="forecast" aria-label="Upcoming reviews by day">
+        <% max = [ @forecast.map(&:count).max, 1 ].max %>
+        <% @forecast.each do |day| %>
+          <li class="forecast__day">
+            <span class="forecast__date">
+              <%= l(day.date, format: :short) %>
+            </span>
+            <span class="forecast__bar-track" aria-hidden="true">
+              <span class="forecast__bar"
+                    style="height: <%= day.count.zero? ? 2 : (day.count * 100 / max) %>%"></span>
+            </span>
+            <span class="forecast__count">
+              <%= day.count %>
+              <span class="visually-hidden"><%= "item".pluralize(day.count) %> due</span>
+            </span>
+          </li>
+        <% end %>
+      </ol>
+    </section>
+
+    <%# --- Consistency streak: kept separate, NOT mastery (plan §3) ------- %>
+    <section class="panel panel--aside" aria-labelledby="streak-heading">
+      <h2 id="streak-heading">Consistency</h2>
+      <p class="streak">
+        <strong class="progress__big"><%= @consistency_streak %></strong>
+        <%= "day".pluralize(@consistency_streak) %> in a row showing up.
+      </p>
+      <p class="muted small">
+        This tracks the habit of reviewing, not how much you've learned —
+        they're deliberately separate. Reviewing ahead of schedule doesn't help,
+        so a quiet day is fine.
+      </p>
+    </section>
+  <% end %>
+</main>
+
+<%= render "shared/tabbar", active: :progress %>

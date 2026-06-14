@@ -1,0 +1,11 @@
+<% content_for :title, "Edit class" %>
+
+<main class="cohorts">
+  <nav class="breadcrumb">
+    <%= link_to "← #{@cohort.name}", cohort_path(@cohort) %>
+  </nav>
+  <h1>Edit class</h1>
+  <%= render "form", cohort: @cohort %>
+</main>
+
+<%= render "shared/tabbar", active: :today %>

@@ -1,0 +1,15 @@
+<tr id="<%= dom_id(item) %>" class="item">
+  <td class="item__prompt"><%= item.prompt %></td>
+  <td class="item__answer"><%= item.answer %></td>
+  <td><%= stage_chip(local_assigns.fetch(:stage) { item.display_stage }) %></td>
+  <td class="muted small">
+    <%= item.due_at ? l(item.due_at, format: :short) : "—" %>
+  </td>
+  <td class="item__actions">
+    <%= link_to "Edit", edit_item_path(item), class: "btn btn--small",
+          data: { turbo_stream: true } %>
+    <%= button_to "Delete", item_path(item), method: :delete,
+          form: { data: { turbo_confirm: "Delete this item?" } },
+          class: "btn btn--small btn--danger" %>
+  </td>
+</tr>

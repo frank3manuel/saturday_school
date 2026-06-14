@@ -1,0 +1,11 @@
+<% content_for :title, "New class" %>
+
+<main class="cohorts">
+  <nav class="breadcrumb">
+    <%= link_to "← Classes", cohorts_path %>
+  </nav>
+  <h1>New class</h1>
+  <%= render "form", cohort: @cohort %>
+</main>
+
+<%= render "shared/tabbar", active: :today %>

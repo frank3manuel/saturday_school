@@ -1,0 +1,22 @@
+algebra:
+  subject: math
+  title: Algebra basics
+  body: Solving for x
+  position: 0
+
+geometry:
+  subject: math
+  title: Geometry basics
+  position: 1
+
+revolutions:
+  subject: history
+  title: Revolutions
+  position: 0
+
+# Teacher-authored lesson assigned to cohort_one (M6).
+teacher_lesson:
+  subject: teacher_subject
+  title: Spanish greetings
+  body: Common greetings
+  position: 0

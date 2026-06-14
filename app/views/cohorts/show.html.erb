@@ -1,0 +1,81 @@
+<% content_for :title, @cohort.name %>
+
+<main class="cohort">
+  <nav class="breadcrumb">
+    <%= link_to "← Classes", cohorts_path %>
+    <%= link_to "Edit", edit_cohort_path(@cohort) %>
+    <%= link_to "Class progress", cohort_progress_path(@cohort) %>
+  </nav>
+
+  <header>
+    <h1><%= @cohort.name %></h1>
+    <% if @cohort.description.present? %>
+      <p class="muted"><%= @cohort.description %></p>
+    <% end %>
+  </header>
+
+  <section aria-labelledby="code-heading" class="cohort__code">
+    <h2 id="code-heading">Join code</h2>
+    <p class="muted">Share this code with students so they can join.</p>
+    <p class="cohort__join-code"><code><%= @cohort.join_code %></code></p>
+  </section>
+
+  <section aria-labelledby="roster-heading">
+    <h2 id="roster-heading">Roster (<%= @enrollments.size %>)</h2>
+
+    <%= form_with url: cohort_enrollments_path(@cohort), method: :post, class: "cohort__enroll" do %>
+      <div class="field">
+        <%= label_tag :email_address, "Enroll a student by email" %>
+        <%= email_field_tag :email_address, nil, autocapitalize: "none", autocomplete: "off" %>
+      </div>
+      <%= submit_tag "Enroll" %>
+    <% end %>
+
+    <% if @enrollments.any? %>
+      <ul class="cohort__roster">
+        <% @enrollments.each do |enrollment| %>
+          <li>
+            <%= enrollment.user.email_address %>
+            <%= button_to "Remove", cohort_enrollment_path(@cohort, enrollment),
+                  method: :delete,
+                  data: { turbo_confirm: "Remove this student from the roster?" } %>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="muted">No students yet. Share the join code or enroll by email.</p>
+    <% end %>
+  </section>
+
+  <section aria-labelledby="assign-heading">
+    <h2 id="assign-heading">Assigned lessons (<%= @assignments.size %>)</h2>
+
+    <%# Assign one of the teacher's own lessons to this cohort (M6c). %>
+    <%= form_with url: cohort_assignments_path(@cohort), method: :post, class: "cohort__assign" do %>
+      <div class="field">
+        <%= label_tag :lesson_id, "Assign a lesson you own" %>
+        <%= collection_select :assignment, :lesson_id, assignable_lessons(current_user),
+              :id, ->(l) { "#{l.subject.name} — #{l.title}" },
+              { include_blank: "Select a lesson" } %>
+      </div>
+      <%= submit_tag "Assign lesson" %>
+    <% end %>
+
+    <% if @assignments.any? %>
+      <ul class="cohort__assignments">
+        <% @assignments.each do |assignment| %>
+          <li>
+            <%= assignment.lesson.subject.name %> — <%= assignment.lesson.title %>
+            <%= button_to "Withdraw", cohort_assignment_path(@cohort, assignment),
+                  method: :delete,
+                  data: { turbo_confirm: "Withdraw this lesson? Students keep their progress." } %>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="muted">Nothing assigned yet. Assign one of your own lessons above.</p>
+    <% end %>
+  </section>
+</main>
+
+<%= render "shared/tabbar", active: :today %>

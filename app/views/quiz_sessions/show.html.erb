@@ -1,0 +1,13 @@
+<% content_for :title, "Review" %>
+<% content_for :body_class, "quiz-screen" %>
+
+<%= render "card",
+      item: @item,
+      origin: @origin,
+      quiz_session: @quiz_session,
+      position: @position,
+      total: @total,
+      can_undo: @can_undo,
+      good_interval: @good_interval,
+      hard_interval: @hard_interval,
+      missed_interval: @missed_interval %>

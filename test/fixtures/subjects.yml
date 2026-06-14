@@ -1,0 +1,18 @@
+math:
+  name: Mathematics
+  description: Numbers and shapes
+  position: 0
+  user: owner
+
+history:
+  name: History
+  description: Things that happened
+  position: 1
+  user: owner
+
+# Teacher-authored content (M6): the source for assignments to cohort_one.
+teacher_subject:
+  name: Teacher Spanish
+  description: Vocabulary the teacher assigns
+  position: 0
+  user: teacher

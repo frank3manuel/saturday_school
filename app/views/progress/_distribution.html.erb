@@ -1,0 +1,36 @@
+<%# One stacked stage-distribution bar (plan §3): a row of segments sized by
+    count. Each segment carries its stage label + count as text (never color
+    alone — a11y, plan §9), and a per-segment count list follows for screen
+    readers and small screens. %>
+<div class="dist <%= "dist--primary" if primary %>">
+  <div class="dist__head">
+    <span class="dist__name"><%= distribution.name %></span>
+    <span class="muted small">
+      <%= distribution.truly_learned %>/<%= distribution.total %> stuck (week+)
+    </span>
+  </div>
+
+  <div class="dist__bar" role="img"
+       aria-label="<%= distribution.name %>: <%= MasteryStage::STAGES.map { |s| "#{distribution.counts[s]} #{stage_label(s)}" }.join(", ") %>">
+    <% MasteryStage::STAGES.each do |stage| %>
+      <% count = distribution.counts.fetch(stage, 0) %>
+      <% next if count.zero? %>
+      <span class="dist__seg stage--<%= stage %>"
+            style="flex-grow: <%= count %>"
+            title="<%= count %> <%= stage_label(stage) %>">
+        <span class="dist__seg-text"><%= count %></span>
+      </span>
+    <% end %>
+  </div>
+
+  <ul class="dist__legend small">
+    <% MasteryStage::STAGES.each do |stage| %>
+      <% count = distribution.counts.fetch(stage, 0) %>
+      <% next if count.zero? %>
+      <li>
+        <span class="legend__swatch stage--<%= stage %>" aria-hidden="true"></span>
+        <%= stage_label(stage) %>: <%= count %>
+      </li>
+    <% end %>
+  </ul>
+</div>

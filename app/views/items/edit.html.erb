@@ -1,0 +1,13 @@
+<% content_for :title, "Edit item" %>
+
+<main class="library">
+  <nav class="breadcrumb">
+    <%= link_to "← #{@item.lesson.title}", lesson_path(@item.lesson) %>
+  </nav>
+
+  <header class="library__header">
+    <h1>Edit item</h1>
+  </header>
+
+  <%= render "items/form", item: @item, lesson: @item.lesson %>
+</main>

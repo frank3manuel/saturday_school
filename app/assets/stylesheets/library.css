@@ -1,0 +1,66 @@
+/* Library authoring surface (M1). Consumes the shared tokens/components from
+   design.css; no :root or palette of its own. */
+
+.library {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 24px 20px calc(5rem + env(safe-area-inset-bottom));
+}
+@media (min-width: 860px) { .library { padding-bottom: 2rem; } }
+
+.library__header { margin: 0.25rem 0 1.5rem; }
+.library__header h1 { margin: 0 0 0.25rem; font-size: 1.6rem; }
+
+.library h2 { font-size: 1.2rem; margin: 1.75rem 0 0.75rem; }
+
+.library .muted { margin: 0.25rem 0; }
+
+/* Cards (subjects, lessons) — list of clickable rows. */
+.card-list { list-style: none; padding: 0; margin: 1rem 0 0; display: grid; gap: 0.6rem; }
+
+.card-list .card { display: block; padding: 0; }
+
+.card__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 1rem;
+}
+
+.card__main { min-width: 0; }
+.card__title { font-weight: 700; color: var(--ink); text-decoration: none; font-size: 1.05rem; }
+.card__title:hover { color: var(--primary-d); }
+.card__actions { display: flex; gap: 0.4rem; flex-shrink: 0; }
+.card__actions form { margin: 0; }
+
+/* Items table — sits inside a rounded card surface to match the mockup. */
+.items {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  font-size: 13.5px;
+}
+.items th, .items td {
+  text-align: left;
+  padding: 11px 12px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+.items th {
+  background: #fafbfe;
+  font-size: 11.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  font-weight: 700;
+}
+.items tr:last-child td { border-bottom: none; }
+.items__actions-col { width: 1%; white-space: nowrap; }
+.item__prompt { font-weight: 600; }
+.item__actions { white-space: nowrap; }
+.item__actions form { display: inline; margin: 0; }
+.item--editing td { background: var(--primary-soft); }

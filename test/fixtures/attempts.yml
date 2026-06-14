@@ -1,0 +1,22 @@
+# A correct attempt on a reviewing item.
+good_attempt:
+  item: due_item
+  user: owner
+  quiz_session: math_session
+  grade: good
+  correct: true
+  reviewed_at: <%= 1.day.ago %>
+  interval_before: 1
+  interval_after: 3
+  response_latency_ms: 2400
+
+# A missed attempt.
+missed_attempt:
+  item: due_item
+  user: owner
+  quiz_session: math_session
+  grade: missed
+  correct: false
+  reviewed_at: <%= 2.days.ago %>
+  interval_before: 3
+  interval_after: 1

@@ -1,0 +1,85 @@
+<%# One quiz card: prompt → reveal whole card → 3-way self-grade. The whole %>
+<%# answer card is the reveal tap target; grade bar is bottom-pinned. The %>
+<%# Stimulus `quiz` controller handles Space=reveal, 1/2/3=grade, latency. %>
+<%= turbo_frame_tag "quiz_card" do %>
+  <div class="quiz"
+       data-controller="quiz"
+       data-quiz-revealed-class="quiz--revealed">
+
+    <header class="quiz__progress">
+      <p class="quiz__count" aria-live="polite">
+        Card <%= position %> of <%= total %>
+      </p>
+      <%= button_to "End session", finish_quiz_session_path(quiz_session),
+            method: :post, class: "btn btn--ghost btn--small quiz__end",
+            form: { data: { turbo_frame: "_top" } } %>
+    </header>
+
+    <%# Whole card is the reveal target (plan §9, §10): an ARIA button so it is %>
+    <%# keyboard-operable (click + Enter/Space) with visible focus, while still %>
+    <%# allowing block content (prompt/answer) the <button> element forbids. %>
+    <div class="quiz__card"
+         data-quiz-target="card"
+         data-action="click->quiz#reveal keydown->quiz#cardKeydown"
+         role="button"
+         tabindex="0"
+         aria-expanded="false">
+      <%# Provenance (plan §6): make assigned-vs-personal visible without nagging.
+          Defaults to personal when no origin is provided. %>
+      <% if local_assigns.fetch(:origin, :personal) == :assigned %>
+        <p class="quiz__origin" aria-label="From a class assignment">Assigned</p>
+      <% end %>
+
+      <div class="quiz__prompt"><%= simple_format(item.prompt) %></div>
+
+      <p class="quiz__reveal-hint" data-quiz-target="revealHint">
+        Tap to show answer · or press Space
+      </p>
+
+      <div class="quiz__answer" data-quiz-target="answer" hidden>
+        <span class="quiz__answer-label">Answer</span>
+        <%= simple_format(item.answer) %>
+      </div>
+    </div>
+
+    <%# ARIA live region: announces the reveal to screen readers (plan §9). %>
+    <p class="visually-hidden" aria-live="polite" data-quiz-target="liveRegion"></p>
+
+    <%# Bottom-pinned grade bar — hidden until the answer is revealed. Each %>
+    <%# button shows its consequence to nudge honest grading (plan §9). %>
+    <div class="grade-bar" data-quiz-target="grades" hidden>
+      <%= form_with url: quiz_session_attempt_path(quiz_session), method: :post,
+            data: { quiz_target: "form" } do |f| %>
+        <%= hidden_field_tag :item_id, item.id %>
+        <%= hidden_field_tag :response_latency_ms, "", data: { quiz_target: "latency" } %>
+        <%= hidden_field_tag :grade, "", data: { quiz_target: "grade" } %>
+
+        <div class="grade-bar__buttons">
+          <button type="button" class="grade grade--missed"
+                  data-action="quiz#grade" data-grade="missed">
+            <span class="grade__label">Missed</span>
+            <span class="grade__hint"><%= interval_phrase(missed_interval) %></span>
+            <span class="grade__key" aria-hidden="true">1</span>
+          </button>
+          <button type="button" class="grade grade--hard"
+                  data-action="quiz#grade" data-grade="hard">
+            <span class="grade__label">Hard</span>
+            <span class="grade__hint"><%= interval_phrase(hard_interval) %></span>
+            <span class="grade__key" aria-hidden="true">2</span>
+          </button>
+          <button type="button" class="grade grade--good"
+                  data-action="quiz#grade" data-grade="good">
+            <span class="grade__label">Good</span>
+            <span class="grade__hint"><%= interval_phrase(good_interval) %></span>
+            <span class="grade__key" aria-hidden="true">3</span>
+          </button>
+        </div>
+      <% end %>
+
+      <% if can_undo %>
+        <%= button_to "Undo last", quiz_session_attempt_path(quiz_session),
+              method: :delete, class: "btn btn--ghost btn--small quiz__undo" %>
+      <% end %>
+    </div>
+  </div>
+<% end %>

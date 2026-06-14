@@ -2,7 +2,8 @@
 <html>
   <head>
     <title><%= content_for(:title) || "Saturday School" %></title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta name="theme-color" content="#4f46e5">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -17,7 +18,30 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <%= yield %>
+  <body class="<%= content_for(:body_class) %>">
+    <% flash.each do |type, message| %>
+      <div class="flash flash--<%= type %>" role="alert"><%= message %></div>
+    <% end %>
+
+    <%# Responsive app shell: desktop sidebar + main on >=860px, bottom tabbar
+        (rendered inside each view) on narrow widths. The quiz is full-bleed and
+        opts out of the sidebar via the "quiz-screen" body class. The account
+        menu lives in the sidebar footer on desktop (plan §7, §11: sign-out is a
+        DELETE button, never a GET link). %>
+    <% if authenticated? && content_for(:body_class).to_s.exclude?("quiz-screen") %>
+      <div class="app">
+        <%= render "shared/sidebar" %>
+        <div class="app__main"><%= yield %></div>
+      </div>
+      <%# Mobile-only account menu (hidden >=860px, where the sidebar footer owns
+          it). Sign-out is a DELETE button, never a GET link (plan §7, §11). %>
+      <div class="account-menu">
+        <%= link_to "Account", account_path, class: "account-menu__link" %>
+        <%= button_to "Sign out", session_path, method: :delete,
+              class: "account-menu__signout" %>
+      </div>
+    <% else %>
+      <%= yield %>
+    <% end %>
   </body>
 </html>

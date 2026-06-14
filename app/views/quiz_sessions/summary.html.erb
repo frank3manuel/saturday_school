@@ -1,0 +1,33 @@
+<% content_for :title, "Review summary" %>
+
+<main class="summary">
+  <header class="summary__header">
+    <h1>Review summary</h1>
+    <p class="summary__count"><%= @reviewed %>/<%= @planned %> complete</p>
+    <p class="muted"><%= @quiz_session.scope_label %></p>
+  </header>
+
+  <% if @attempts.any? %>
+    <ul class="summary__list">
+      <% @attempts.each do |attempt| %>
+        <li class="summary__item">
+          <span class="summary__prompt"><%= truncate(attempt.item.prompt, length: 60) %></span>
+          <%= stage_chip(@stages.fetch(attempt.item.id)) %>
+          <span class="muted small">
+            <% if attempt.correct %>
+              We'll bring it back <%= interval_phrase(attempt.interval_after) %>.
+            <% else %>
+              We'll bring it back <%= interval_phrase(attempt.interval_after) %> to relearn.
+            <% end %>
+          </span>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p class="empty">No items graded this session.</p>
+  <% end %>
+
+  <nav class="summary__nav">
+    <%= link_to "Back to Today", root_path, class: "cta cta--small" %>
+  </nav>
+</main>

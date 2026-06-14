@@ -25,6 +25,10 @@ Rails.application.configure do
   config.action_controller.perform_caching = false
   config.cache_store = :null_store
 
+  # Use the cheapest bcrypt cost in test so password hashing doesn't slow the
+  # suite (plan §11 — default cost ≥12 still applies in production).
+  ActiveModel::SecurePassword.min_cost = true
+
   # Render exception templates for rescuable exceptions and raise for other exceptions.
   config.action_dispatch.show_exceptions = :rescuable
 

@@ -1,0 +1,17 @@
+# `student`'s per-student SRS state for the assigned teacher items (the hybrid
+# model's non-owner home). One item is due now, one is new — mirrors the inline
+# SRS columns on items.
+student_item_one_due:
+  user: student
+  item: teacher_item_one
+  state: review
+  due_at: <%= 1.day.ago %>
+  interval_days: 3
+  box: 2
+  streak: 2
+  repetitions: 2
+
+student_item_two_new:
+  user: student
+  item: teacher_item_two
+  state: learning

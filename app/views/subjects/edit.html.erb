@@ -1,0 +1,5 @@
+<%= turbo_frame_tag dom_id(@subject) do %>
+  <div class="card">
+    <%= render "subjects/form", subject: @subject %>
+  </div>
+<% end %>

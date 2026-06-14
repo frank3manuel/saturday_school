@@ -1,0 +1,36 @@
+<% content_for :title, "Admin · Accounts" %>
+
+<main class="admin">
+  <nav class="breadcrumb">
+    <%= link_to "← Today", root_path %>
+    <%= link_to "Audit log", admin_audit_events_path %>
+  </nav>
+
+  <header>
+    <h1>Accounts</h1>
+    <p class="muted">Manage roles and accounts. Admins manage accounts only — never learning content.</p>
+  </header>
+
+  <table class="admin__users">
+    <thead>
+      <tr>
+        <th scope="col">Email</th>
+        <th scope="col">Role</th>
+        <th scope="col">Joined</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @users.each do |user| %>
+        <tr>
+          <td><%= user.email_address %></td>
+          <td><%= user.role.capitalize %></td>
+          <td><%= user.created_at.to_date.iso8601 %></td>
+          <td><%= link_to "Manage", admin_user_path(user) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</main>
+
+<%= render "shared/tabbar", active: :today %>

@@ -1,0 +1,13 @@
+<%# Swap ONLY the card frame to the next card (plan §10: Turbo Frames swap %>
+<%# only the card). %>
+<%= turbo_stream.replace "quiz_card", partial: "quiz_sessions/card", locals: {
+      item: @item,
+      origin: @origin,
+      quiz_session: @quiz_session,
+      position: @position,
+      total: @total,
+      can_undo: @can_undo,
+      good_interval: @good_interval,
+      hard_interval: @hard_interval,
+      missed_interval: @missed_interval
+    } %>

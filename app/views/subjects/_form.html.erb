@@ -1,0 +1,20 @@
+<%= form_with model: subject, class: "form" do |form| %>
+  <%= render "shared/errors", record: subject %>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name, autofocus: subject.errors.any? %>
+  </div>
+
+  <div class="field">
+    <%= form.label :description %>
+    <%= form.text_area :description, rows: 2 %>
+  </div>
+
+  <div class="form__actions">
+    <%= form.submit subject.persisted? ? "Save subject" : "Add subject", class: "btn" %>
+    <% if subject.persisted? %>
+      <%= link_to "Cancel", subject_path(subject), class: "btn btn--ghost" %>
+    <% end %>
+  </div>
+<% end %>

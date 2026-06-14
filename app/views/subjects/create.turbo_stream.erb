@@ -1,0 +1,8 @@
+<%= turbo_stream.append "subjects" do %>
+  <%= render @subject %>
+<% end %>
+
+<%# Reset the inline add form for the next entry. %>
+<%= turbo_stream.update "new_subject" do %>
+  <%= render "subjects/form", subject: Subject.new %>
+<% end %>

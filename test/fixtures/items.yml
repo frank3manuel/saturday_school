@@ -1,0 +1,68 @@
+# A learning (new) item: never reviewed, no due date.
+new_item:
+  lesson: algebra
+  prompt: What is x if x + 1 = 3?
+  answer: "2"
+  item_type: free_recall
+  state: learning
+
+# Active and due (due_at in the past).
+due_item:
+  lesson: algebra
+  prompt: What is x if 2x = 10?
+  answer: "5"
+  item_type: free_recall
+  state: review
+  due_at: <%= 1.day.ago %>
+  interval_days: 3
+  box: 2
+  streak: 2
+  repetitions: 2
+
+# Active but not yet due (due_at in the future).
+not_due_item:
+  lesson: geometry
+  prompt: Sum of angles in a triangle?
+  answer: 180 degrees
+  state: review
+  due_at: <%= 5.days.from_now %>
+  interval_days: 7
+  box: 3
+
+# Suspended — should be excluded from active/due scopes even though due.
+suspended_item:
+  lesson: geometry
+  prompt: Area of a circle?
+  answer: pi r squared
+  suspended: true
+  state: review
+  due_at: <%= 1.day.ago %>
+
+# Mastered item.
+mastered_item:
+  lesson: revolutions
+  prompt: Year of the French Revolution?
+  answer: "1789"
+  state: mastered
+  mastered_at: <%= 30.days.ago %>
+  due_at: <%= 10.days.from_now %>
+  interval_days: 60
+  box: 5
+  streak: 6
+
+# Teacher-authored items in `teacher_lesson` — the master content assigned to
+# cohort_one. The inline SRS columns here hold the TEACHER's (owner's) state;
+# enrolled students get their own review_states rows.
+teacher_item_one:
+  lesson: teacher_lesson
+  prompt: "Hello in Spanish?"
+  answer: Hola
+  item_type: free_recall
+  state: learning
+
+teacher_item_two:
+  lesson: teacher_lesson
+  prompt: "Goodbye in Spanish?"
+  answer: Adios
+  item_type: free_recall
+  state: learning

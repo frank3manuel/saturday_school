@@ -1,0 +1,20 @@
+<%= turbo_frame_tag dom_id(lesson), class: "card" do %>
+  <div class="card__row">
+    <div class="card__main">
+      <%# Break out of the card's turbo_frame so the title navigates to the
+          lesson's show page instead of trying to swap a missing frame
+          ("Content missing"). %>
+      <%= link_to lesson.title, lesson_path(lesson), class: "card__title",
+            data: { turbo_frame: "_top" } %>
+      <p class="muted small">
+        <%= pluralize(lesson.items.size, "item") %>
+      </p>
+    </div>
+    <div class="card__actions">
+      <%= link_to "Edit", edit_lesson_path(lesson), class: "btn btn--small" %>
+      <%= button_to "Delete", lesson_path(lesson), method: :delete,
+            form: { data: { turbo_confirm: "Delete this lesson and all its items?" } },
+            class: "btn btn--small btn--danger" %>
+    </div>
+  </div>
+<% end %>

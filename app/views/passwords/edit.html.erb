@@ -1,0 +1,38 @@
+<% content_for :title, "Choose a new password" %>
+
+<h2>Choose a new password</h2>
+
+<%= form_with url: password_path(params[:token]), method: :patch do |f| %>
+  <% if @user.errors.any? %>
+    <div class="field-errors" role="alert" aria-live="assertive">
+      <%= @user.errors.full_messages.to_sentence %>
+    </div>
+  <% end %>
+
+  <div class="field password-field" data-controller="password-visibility">
+    <%= f.label :password, "New password" %>
+    <%= f.password_field :password,
+          autocomplete: "new-password",
+          autofocus: true,
+          enterkeyhint: "next",
+          required: true,
+          minlength: 8,
+          aria: { describedby: "password-hint" },
+          data: { password_visibility_target: "input" } %>
+    <button type="button" class="password-field__toggle"
+            aria-pressed="false"
+            data-password-visibility-target="toggle"
+            data-action="password-visibility#toggle">Show</button>
+    <p class="field__hint" id="password-hint">At least 8 characters.</p>
+  </div>
+
+  <div class="field">
+    <%= f.label :password_confirmation, "Confirm new password" %>
+    <%= f.password_field :password_confirmation,
+          autocomplete: "new-password",
+          enterkeyhint: "go",
+          required: true %>
+  </div>
+
+  <%= f.submit "Set new password", class: "btn" %>
+<% end %>

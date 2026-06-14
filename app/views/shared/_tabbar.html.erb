@@ -1,0 +1,22 @@
+<%# Bottom tab navigation — the 4-destination IA (plan §9): Today, Library,
+    Quiz, Progress. Recognition over recall; thumb-reachable 48px targets
+    (plan §10). `aria-current` marks the active destination (text + position,
+    not colour alone — a11y). The Quiz tab links to the start-review action.
+    Pass `active:` one of :today, :library, :quiz, :progress. %>
+<nav class="tabbar" aria-label="Main">
+  <%= link_to "Today", root_path,
+        class: "tabbar__link",
+        aria: { current: ("page" if active == :today) } %>
+  <%= link_to "Library", library_path,
+        class: "tabbar__link",
+        aria: { current: ("page" if active == :library) } %>
+  <%# Quiz is entered via an action (start a review), so it's a POST button
+      styled to sit in the grid like the link tabs. %>
+  <%= button_to "Quiz", quiz_sessions_path,
+        class: "tabbar__link",
+        form: { class: "tabbar__form" },
+        aria: { current: ("page" if active == :quiz) } %>
+  <%= link_to "Progress", progress_path,
+        class: "tabbar__link",
+        aria: { current: ("page" if active == :progress) } %>
+</nav>

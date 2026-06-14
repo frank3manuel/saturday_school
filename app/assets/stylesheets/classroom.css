@@ -1,0 +1,135 @@
+/* Classroom (M6), admin, and account screens. These were previously unstyled;
+   here they pick up the shared design system (cards, sections, tables) for
+   visual consistency. Consumes tokens/components from design.css. */
+
+.account, .cohorts, .cohort, .memberships, .admin {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 24px 20px calc(5rem + env(safe-area-inset-bottom));
+}
+@media (min-width: 860px) {
+  .account, .cohorts, .cohort, .memberships, .admin { padding-bottom: 2rem; }
+}
+
+.account > header h1,
+.cohorts > header h1,
+.cohort > header h1,
+.memberships > header h1,
+.admin > header h1 { font-size: 1.6rem; }
+
+.account > header,
+.cohorts > header,
+.cohort > header,
+.memberships > header,
+.admin > header {
+  margin: 0.25rem 0 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.cohorts > header h1 { margin: 0; }
+
+/* Bare h1 (edit/new class screens that don't use a <header>). */
+.cohorts > h1 { font-size: 1.6rem; margin: 0 0 1rem; }
+
+/* Each labelled section becomes a surface card. */
+.account section,
+.cohort section,
+.memberships section,
+.admin section {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px;
+  margin: 0 0 1rem;
+}
+.account section h2,
+.cohort section h2,
+.memberships section h2,
+.admin section h2 { font-size: 1.15rem; margin: 0 0 0.5rem; }
+
+.account section h3 { font-size: 1rem; margin: 1rem 0 0.5rem; }
+
+/* Inline forms inside cards (enroll, assign, join, role change). */
+.cohort form, .memberships form, .admin form, .account form { margin: 0.5rem 0 0; }
+
+/* Roster / assignment / membership / class lists — rows on a card surface. */
+.cohorts__list,
+.cohort__roster,
+.cohort__assignments,
+.memberships__list {
+  list-style: none;
+  padding: 0;
+  margin: 0.75rem 0 0;
+  display: grid;
+  gap: 0.5rem;
+}
+.cohorts__list li,
+.cohort__roster li,
+.cohort__assignments li,
+.memberships__list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 0.7rem 0.9rem;
+}
+.cohorts__list li { font-weight: 600; }
+.cohorts__list a { text-decoration: none; }
+
+.cohort__join-code code {
+  display: inline-block;
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  background: var(--primary-soft);
+  color: var(--primary-d);
+  border-radius: 10px;
+  padding: 8px 16px;
+}
+
+/* Admin tables reuse the shared data-table look. */
+.admin__users, .admin__audit-log {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.admin__users th, .admin__audit-log th {
+  text-align: left;
+  color: var(--muted);
+  font-size: 11.5px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+  font-weight: 700;
+}
+.admin__users td, .admin__audit-log td {
+  padding: 11px 12px;
+  border-bottom: 1px solid var(--line);
+}
+.admin__users tr:last-child td, .admin__audit-log tr:last-child td { border-bottom: none; }
+
+.admin__audit {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0 0;
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+/* Destructive sections get a subtle danger tint. */
+.account__data h3 + p,
+.admin__danger { }

@@ -1,0 +1,15 @@
+<%# Queue exhausted after a grade: swap the card frame for a "complete" panel %>
+<%# with a link to the summary (no full-page redirect needed — we stay in the %>
+<%# frame, plan §10). %>
+<%= turbo_stream.replace "quiz_card" do %>
+  <%= turbo_frame_tag "quiz_card" do %>
+    <div class="quiz quiz--done">
+      <div class="quiz__done-panel" role="status" aria-live="polite">
+        <p class="quiz__done-headline">Session complete</p>
+        <p class="muted">Nice work showing up — that's the whole game.</p>
+        <%= link_to "See summary", summary_quiz_session_path(@quiz_session),
+              class: "cta cta--small", data: { turbo_frame: "_top" } %>
+      </div>
+    </div>
+  <% end %>
+<% end %>

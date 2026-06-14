@@ -1,0 +1,23 @@
+<%= turbo_frame_tag dom_id(subject), class: "card" do %>
+  <div class="card__row">
+    <div class="card__main">
+      <%# Break out of the card's turbo_frame so the title navigates to the
+          subject's show page instead of trying to swap a missing frame
+          ("Content missing"). %>
+      <%= link_to subject.name, subject_path(subject), class: "card__title",
+            data: { turbo_frame: "_top" } %>
+      <% if subject.description.present? %>
+        <p class="muted"><%= subject.description %></p>
+      <% end %>
+      <p class="muted small">
+        <%= pluralize(subject.lessons.size, "lesson") %>
+      </p>
+    </div>
+    <div class="card__actions">
+      <%= link_to "Edit", edit_subject_path(subject), class: "btn btn--small" %>
+      <%= button_to "Delete", subject_path(subject), method: :delete,
+            form: { data: { turbo_confirm: "Delete this subject and all its lessons and items?" } },
+            class: "btn btn--small btn--danger" %>
+    </div>
+  </div>
+<% end %>

@@ -1,0 +1,27 @@
+<% content_for :title, "My classes" %>
+
+<main class="cohorts">
+  <nav class="breadcrumb">
+    <%= link_to "← Today", root_path %>
+  </nav>
+
+  <header>
+    <h1>Classes you teach</h1>
+    <%= link_to "New class", new_cohort_path, class: "btn" %>
+  </header>
+
+  <% if @cohorts.any? %>
+    <ul class="cohorts__list">
+      <% @cohorts.each do |cohort| %>
+        <li>
+          <%= link_to cohort.name, cohort_path(cohort) %>
+          <span class="muted"><%= pluralize(cohort.active_students.size, "student") %></span>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p class="muted">You don't teach any classes yet. Create one to get a join code to share.</p>
+  <% end %>
+</main>
+
+<%= render "shared/tabbar", active: :today %>

@@ -1,0 +1,43 @@
+<% content_for :title, "Sign in" %>
+
+<h2>Sign in</h2>
+
+<%# Full-page auth transition: submit as a normal navigation (not a Turbo
+    form), so the post-login redirect lands on a cleanly-rendered page. %>
+<%= form_with url: session_path, method: :post, data: { turbo: false } do |f| %>
+  <div class="field">
+    <%= f.label :email_address, "Email" %>
+    <%= f.email_field :email_address,
+          autocomplete: "username",
+          autofocus: true,
+          autocapitalize: "none",
+          autocorrect: "off",
+          spellcheck: "false",
+          inputmode: "email",
+          enterkeyhint: "next",
+          value: params[:email_address],
+          required: true %>
+  </div>
+
+  <div class="field password-field" data-controller="password-visibility">
+    <%= f.label :password, "Password" %>
+    <%= f.password_field :password,
+          autocomplete: "current-password",
+          enterkeyhint: "go",
+          required: true,
+          data: { password_visibility_target: "input" } %>
+    <button type="button" class="password-field__toggle"
+            aria-pressed="false"
+            data-password-visibility-target="toggle"
+            data-action="password-visibility#toggle">Show</button>
+  </div>
+
+  <%= f.submit "Sign in", class: "btn" %>
+<% end %>
+
+<div class="auth__alt">
+  <%= link_to "Forgot your password?", new_password_path %>
+</div>
+<div class="auth__alt">
+  New here? <%= link_to "Create an account", sign_up_path %>
+</div>

@@ -1,0 +1,22 @@
+<%# subject is required only when creating (nested route); nil on edit. %>
+<% url = lesson.persisted? ? lesson_path(lesson) : subject_lessons_path(subject) %>
+<%= form_with model: lesson, url: url, class: "form" do |form| %>
+  <%= render "shared/errors", record: lesson %>
+
+  <div class="field">
+    <%= form.label :title %>
+    <%= form.text_field :title, autofocus: lesson.errors.any? %>
+  </div>
+
+  <div class="field">
+    <%= form.label :body, "Notes" %>
+    <%= form.text_area :body, rows: 3 %>
+  </div>
+
+  <div class="form__actions">
+    <%= form.submit lesson.persisted? ? "Save lesson" : "Add lesson", class: "btn" %>
+    <% if lesson.persisted? %>
+      <%= link_to "Cancel", lesson_path(lesson), class: "btn btn--ghost" %>
+    <% end %>
+  </div>
+<% end %>

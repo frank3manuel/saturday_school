@@ -1,0 +1,7 @@
+# teacher assigns their `teacher_lesson` to `cohort_one`. assigned_by must own
+# both the lesson and the cohort (the model double-check) — teacher owns both.
+teacher_lesson_to_cohort_one:
+  cohort: cohort_one
+  lesson: teacher_lesson
+  assigner: teacher
+  assigned_at: <%= 2.days.ago %>

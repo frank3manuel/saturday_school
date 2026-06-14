@@ -1,0 +1,14 @@
+# A subject-scoped session.
+math_session:
+  subject: math
+  user: owner
+  started_at: <%= 1.hour.ago %>
+  planned_count: 5
+
+# An "all due" session (no subject scope).
+all_due_session:
+  subject: null
+  user: owner
+  started_at: <%= 2.hours.ago %>
+  completed_at: <%= 90.minutes.ago %>
+  planned_count: 12

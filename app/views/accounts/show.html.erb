@@ -1,0 +1,78 @@
+<% content_for :title, "Account" %>
+
+<main class="account">
+  <nav class="breadcrumb">
+    <%= link_to "← Today", root_path %>
+  </nav>
+
+  <header>
+    <h1>Account</h1>
+    <p class="muted">Signed in as <%= current_user.email_address %>.</p>
+  </header>
+
+  <% if @user&.errors&.any? %>
+    <div class="field-errors" role="alert" aria-live="assertive">
+      <%= @user.errors.full_messages.to_sentence %>
+    </div>
+  <% end %>
+
+  <%# Each form requires the current password (plan §11). %>
+  <section aria-labelledby="email-heading">
+    <h2 id="email-heading">Change email</h2>
+    <%= form_with url: account_path, method: :patch do |f| %>
+      <div class="field">
+        <%= f.label :email_address, "New email" %>
+        <%= f.email_field :email_address, value: current_user.email_address,
+              autocomplete: "email", autocapitalize: "none", required: true %>
+      </div>
+      <div class="field">
+        <%= f.label :current_password, "Current password" %>
+        <%= f.password_field :current_password, autocomplete: "current-password", required: true %>
+      </div>
+      <%= f.submit "Update email" %>
+    <% end %>
+  </section>
+
+  <section aria-labelledby="password-heading">
+    <h2 id="password-heading">Change password</h2>
+    <%= form_with url: account_path, method: :patch do |f| %>
+      <div class="field">
+        <%= f.label :current_password, "Current password" %>
+        <%= f.password_field :current_password, autocomplete: "current-password", required: true %>
+      </div>
+      <div class="field">
+        <%= f.label :password, "New password" %>
+        <%= f.password_field :password, autocomplete: "new-password", minlength: 8, required: true %>
+      </div>
+      <div class="field">
+        <%= f.label :password_confirmation, "Confirm new password" %>
+        <%= f.password_field :password_confirmation, autocomplete: "new-password", required: true %>
+      </div>
+      <%= f.hidden_field :commit_password, value: "1" %>
+      <%= f.submit "Update password" %>
+    <% end %>
+  </section>
+
+  <section aria-labelledby="data-heading" class="account__data">
+    <h2 id="data-heading">Your data</h2>
+    <p class="muted">Your subjects, lessons, items, and review history are yours.</p>
+
+    <p><%= link_to "Export my data (JSON)", export_account_path %></p>
+
+    <h3>Delete my account</h3>
+    <p class="muted">
+      This permanently deletes your account and everything in it. This can't be undone.
+      Type your email address (<strong><%= current_user.email_address %></strong>) to confirm.
+    </p>
+    <%= form_with url: account_path, method: :delete do |f| %>
+      <div class="field">
+        <%= f.label :confirm, "Confirm email" %>
+        <%= f.text_field :confirm, autocomplete: "off", autocapitalize: "none" %>
+      </div>
+      <%= f.submit "Delete my account",
+            data: { turbo_confirm: "Permanently delete your account and all data?" } %>
+    <% end %>
+  </section>
+</main>
+
+<%= render "shared/tabbar", active: :today %>

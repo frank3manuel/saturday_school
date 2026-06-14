@@ -1,0 +1,48 @@
+<%# Desktop sidebar (>=860px) of the responsive app shell. Mirrors the approved
+    mockup: brand mark, primary nav with active state, an optional "Due by
+    subject" section (Today only), an Add-lesson affordance, and the account
+    menu pinned to the footer. On narrow screens this is hidden by CSS and the
+    bottom `nav.tabbar` (rendered per-view) takes over instead. The two nav
+    surfaces share `nav_active?` so they never disagree. %>
+<aside class="app__sidebar">
+  <%= link_to root_path, class: "brand" do %>
+    <span class="brand__mark" aria-hidden="true">📘</span> Saturday School
+  <% end %>
+
+  <nav class="navlist" aria-label="Main">
+    <%= link_to root_path, aria: { current: ("page" if nav_active?(:today)) } do %>
+      <span class="ic" aria-hidden="true">🏠</span> Today
+    <% end %>
+    <%= link_to library_path, aria: { current: ("page" if nav_active?(:library)) } do %>
+      <span class="ic" aria-hidden="true">📚</span> Library
+    <% end %>
+    <%= link_to progress_path, aria: { current: ("page" if nav_active?(:progress)) } do %>
+      <span class="ic" aria-hidden="true">📈</span> Progress
+    <% end %>
+  </nav>
+
+  <% if defined?(@due_by_subject) && @due_by_subject.present? %>
+    <div class="side-section">
+      <div class="side-label">Due by subject</div>
+      <div>
+        <% @due_by_subject.each do |row| %>
+          <%= link_to subject_path(row[:id]), class: "subj" do %>
+            <span><%= row[:name] %></span>
+            <span class="subj__cnt"><%= pluralize(row[:count], "due") %></span>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="app__sidebar-footer">
+    <%= link_to "＋ Add lesson", library_path, class: "btn ghost btn--small" %>
+    <div class="side-section">
+      <div class="side-label">Account</div>
+      <div class="app__account">
+        <%= link_to "Account", account_path, class: "btn btn--small btn--ghost" %>
+        <%= button_to "Sign out", session_path, method: :delete, class: "btn btn--small btn--ghost" %>
+      </div>
+    </div>
+  </div>
+</aside>

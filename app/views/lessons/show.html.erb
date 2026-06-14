@@ -1,0 +1,48 @@
+<% content_for :title, @lesson.title %>
+<% content_for :nav_active, "library" %>
+
+<main class="library">
+  <nav class="breadcrumb">
+    <%= link_to "Library", subjects_path %>
+    <span>›</span>
+    <%= link_to @lesson.subject.name, subject_path(@lesson.subject) %>
+    <span>›</span>
+    <span class="muted"><%= @lesson.title %></span>
+  </nav>
+
+  <header class="library__header">
+    <h1><%= @lesson.title %></h1>
+    <% if @lesson.body.present? %>
+      <p class="muted"><%= simple_format @lesson.body %></p>
+    <% end %>
+  </header>
+
+  <h2>Items</h2>
+
+  <%= turbo_frame_tag "new_item" do %>
+    <%= render "items/form", item: @item, lesson: @lesson %>
+  <% end %>
+
+  <table class="items">
+    <thead>
+      <tr>
+        <th>Prompt</th>
+        <th>Answer</th>
+        <th>Stage</th>
+        <th>Next due</th>
+        <th class="items__actions-col">Actions</th>
+      </tr>
+    </thead>
+    <tbody id="items">
+      <% @items.each do |item| %>
+        <%= render item, stage: @stages[item.id] %>
+      <% end %>
+    </tbody>
+  </table>
+
+  <% if @items.empty? %>
+    <p class="empty">No items yet. Add your first one above.</p>
+  <% end %>
+</main>
+
+<%= render "shared/tabbar", active: :library %>

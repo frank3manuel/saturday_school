@@ -1,0 +1,90 @@
+<% content_for :title, "Today" %>
+<% content_for :nav_active, "today" %>
+
+<main class="today">
+  <% if @due_count.positive? %>
+    <section class="hero">
+      <h2>Today</h2>
+      <p>You have <strong><%= pluralize(@due_count, "item") %></strong> due for review.</p>
+      <div class="hero__row">
+        <%= button_to start_review_label(@due_count), quiz_sessions_path,
+              class: "btn primary lg", aria: { label: "Start review, #{@due_count} due" } %>
+        <% if @new_count.positive? %>
+          <%= link_to "Learn #{pluralize(@new_count, 'new item')}", library_path,
+                class: "btn ghost" %>
+        <% end %>
+      </div>
+    </section>
+
+    <p class="muted small today__hint">
+      Short, spaced reviews. We bring each item back right before you'd forget it.
+    </p>
+
+    <div class="card">
+      <h3>Today's queue</h3>
+      <% if @due_by_subject.any? %>
+        <% @due_by_subject.each do |row| %>
+          <div class="duerow">
+            <span><%= row[:name] %></span>
+            <span class="n"><%= row[:count] %></span>
+          </div>
+        <% end %>
+      <% end %>
+      <div class="duerow muted">
+        <span>Capped per session · most overdue first</span><span></span>
+      </div>
+    </div>
+
+    <% if @due_by_subject.size > 1 %>
+      <section class="today__scopes" aria-label="Review one subject">
+        <h3 class="today__subhead">Or review one subject</h3>
+        <ul class="scope-list">
+          <% @due_by_subject.each do |row| %>
+            <li>
+              <%= button_to "#{row[:name]} — #{pluralize(row[:count], 'due')}",
+                    quiz_sessions_path(subject_id: row[:id]),
+                    class: "btn scope-list__btn" %>
+            </li>
+          <% end %>
+        </ul>
+      </section>
+    <% end %>
+  <% else %>
+    <section class="today__empty" aria-live="polite">
+      <div class="face" aria-hidden="true">🌤️</div>
+      <p class="today__empty-headline">Nothing due today</p>
+      <p>
+        You're all caught up. Reviewing ahead of schedule weakens the spacing, so
+        rest easy — resting between reviews is what makes the memory stick.
+      </p>
+      <% if @new_count.positive? %>
+        <p style="margin-top:18px">
+          <%= link_to "Add or learn new items", library_path, class: "btn ghost" %>
+        </p>
+      <% end %>
+    </section>
+  <% end %>
+
+  <section class="today__secondary">
+    <% if @new_count.positive? && @due_count.positive? %>
+      <p class="muted small">
+        <%= pluralize(@new_count, "new item") %> waiting to be learned.
+      </p>
+    <% end %>
+    <nav class="today__nav" aria-label="More">
+      <%= link_to "Learn new", library_path, class: "btn btn--ghost btn--small" %>
+      <%= link_to "Progress", progress_path, class: "btn btn--ghost btn--small" %>
+      <%# Classroom entry points (M6), role-aware. Students join classes; staff
+          (teacher/admin) manage the classes they teach; admins manage accounts. %>
+      <%= link_to "My classes", memberships_path, class: "btn btn--ghost btn--small" %>
+      <% if current_user.staff? %>
+        <%= link_to "Classes I teach", cohorts_path, class: "btn btn--ghost btn--small" %>
+      <% end %>
+      <% if current_user.admin? %>
+        <%= link_to "Admin", admin_users_path, class: "btn btn--ghost btn--small" %>
+      <% end %>
+    </nav>
+  </section>
+</main>
+
+<%= render "shared/tabbar", active: :today %>

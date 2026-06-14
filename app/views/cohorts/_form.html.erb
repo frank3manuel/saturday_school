@@ -1,0 +1,12 @@
+<%= form_with model: cohort, class: "form" do |f| %>
+  <%= render "shared/errors", record: cohort %>
+  <div class="field">
+    <%= f.label :name, "Class name" %>
+    <%= f.text_field :name, required: true %>
+  </div>
+  <div class="field">
+    <%= f.label :description, "Description (optional)" %>
+    <%= f.text_area :description %>
+  </div>
+  <%= f.submit %>
+<% end %>

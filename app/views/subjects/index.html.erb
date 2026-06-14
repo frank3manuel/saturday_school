@@ -1,0 +1,23 @@
+<% content_for :title, "Library" %>
+<% content_for :nav_active, "library" %>
+
+<main class="library">
+  <header class="library__header">
+    <h1>Library</h1>
+    <p class="muted">Your subjects, lessons, and items.</p>
+  </header>
+
+  <%= turbo_frame_tag "new_subject" do %>
+    <%= render "subjects/form", subject: @subject %>
+  <% end %>
+
+  <ul id="subjects" class="card-list">
+    <%= render @subjects %>
+  </ul>
+
+  <% if @subjects.empty? %>
+    <p class="empty">No subjects yet. Add your first one above.</p>
+  <% end %>
+</main>
+
+<%= render "shared/tabbar", active: :library %>

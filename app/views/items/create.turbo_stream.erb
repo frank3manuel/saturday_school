@@ -1,0 +1,7 @@
+<%= turbo_stream.append "items" do %>
+  <%= render @item %>
+<% end %>
+
+<%= turbo_stream.update "new_item" do %>
+  <%= render "items/form", item: @lesson.items.new, lesson: @lesson %>
+<% end %>

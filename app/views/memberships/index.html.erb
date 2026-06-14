@@ -1,0 +1,44 @@
+<% content_for :title, "My classes" %>
+
+<main class="memberships">
+  <nav class="breadcrumb">
+    <%= link_to "← Today", root_path %>
+  </nav>
+
+  <header>
+    <h1>My classes</h1>
+  </header>
+
+  <section aria-labelledby="join-heading" class="memberships__join">
+    <h2 id="join-heading">Join a class</h2>
+    <%= form_with url: memberships_path, method: :post do %>
+      <div class="field">
+        <%= label_tag :join_code, "Class code" %>
+        <%= text_field_tag :join_code, nil, autocapitalize: "characters",
+              autocomplete: "off", inputmode: "latin", required: true %>
+      </div>
+      <%= submit_tag "Join" %>
+    <% end %>
+  </section>
+
+  <section aria-labelledby="mine-heading">
+    <h2 id="mine-heading">Classes you're in</h2>
+    <% if @enrollments.any? %>
+      <ul class="memberships__list">
+        <% @enrollments.each do |enrollment| %>
+          <li>
+            <%= enrollment.cohort.name %>
+            <span class="muted">with <%= enrollment.cohort.teacher.email_address %></span>
+            <%= button_to "Leave", membership_path(enrollment),
+                  method: :delete,
+                  data: { turbo_confirm: "Leave this class? Your review history is kept." } %>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="muted">You haven't joined any classes. Enter a code from your teacher above.</p>
+    <% end %>
+  </section>
+</main>
+
+<%= render "shared/tabbar", active: :today %>

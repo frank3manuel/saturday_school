@@ -1,0 +1,485 @@
+/* =============================================================================
+   Saturday School — design system (single source of truth)
+
+   This file owns the design TOKENS, base element styles, the responsive app
+   shell (desktop sidebar <-> mobile bottom tabbar), and the shared components
+   (buttons, cards, stage pills/chips, forms, tables, flash). Per-feature
+   stylesheets (library, quiz, progress, auth) consume these variables and must
+   NOT redeclare :root or the palette.
+
+   Tokens mirror the approved mockups in
+   saturday_school_project/mockups/index.html.
+   ============================================================================= */
+
+:root {
+  --bg: #eef1f6;
+  --surface: #fff;
+  --ink: #1c2230;
+  --muted: #5b6678;
+  --line: #e2e7ef;
+
+  --primary: #4f46e5;
+  --primary-d: #4338ca;
+  --primary-soft: #eef0fe;
+
+  /* Stage palette — always paired with a text label, never colour alone (a11y). */
+  --st-new: #9aa4b2;
+  --st-learning: #d97706;
+  --st-young: #0ea5e9;
+  --st-maturing: #2563eb;
+  --st-durable: #16a34a;
+
+  --ok: #16a34a;
+  --warn: #d97706;
+  --miss: #dc2626;
+
+  --radius: 14px;
+  --shadow: 0 6px 24px rgba(20, 30, 55, .10);
+
+  /* Back-compat aliases for the original token names still referenced by some
+     feature stylesheets. */
+  --text: var(--ink);
+  --border: var(--line);
+  --accent: var(--primary);
+  --danger: var(--miss);
+
+  --focus: #4338ca;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 { margin: 0; line-height: 1.25; }
+a { color: var(--primary); }
+
+.muted { color: var(--muted); }
+.small { font-size: 0.85rem; }
+
+/* Visible focus everywhere (a11y) — never colour alone. */
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+.visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0);
+  white-space: nowrap; border: 0;
+}
+
+/* --- Flash ----------------------------------------------------------------- */
+.flash {
+  max-width: 760px;
+  margin: 0.75rem auto 0;
+  padding: 0.7rem 1rem;
+  border-radius: 10px;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+.flash--notice { background: #ecfdf3; border: 1px solid #bbe7c6; color: #15803d; }
+.flash--alert  { background: #fdecea; border: 1px solid #f3c6c6; color: var(--miss); }
+
+/* =============================================================================
+   App shell — ONE responsive layout.
+   Desktop (>=860px): left sidebar + main content grid.
+   Narrow: sidebar hidden, bottom tabbar (rendered per-view) takes over.
+   ============================================================================= */
+.app {
+  min-height: 100dvh;
+}
+
+.app__sidebar { display: none; }
+
+.app__main { min-width: 0; }
+
+@media (min-width: 860px) {
+  .app {
+    display: grid;
+    grid-template-columns: 230px 1fr;
+  }
+  .app__sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    background: #fafbfe;
+    border-right: 1px solid var(--line);
+    padding: 16px 14px;
+    min-height: 100dvh;
+    position: sticky;
+    top: 0;
+    align-self: start;
+  }
+  /* On desktop the bottom tabbar is redundant with the sidebar nav. */
+  .tabbar { display: none !important; }
+}
+
+/* Sidebar internals */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-weight: 800;
+  font-size: 16px;
+  color: var(--ink);
+  text-decoration: none;
+}
+.brand__mark {
+  width: 26px; height: 26px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--primary), #7c83f3);
+  display: grid; place-items: center;
+  color: #fff; font-size: 14px;
+}
+
+.navlist { display: flex; flex-direction: column; gap: 2px; }
+.navlist a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 11px;
+  border-radius: 9px;
+  text-decoration: none;
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 14px;
+}
+.navlist a:hover { background: var(--primary-soft); color: var(--primary-d); }
+.navlist a[aria-current="page"] { background: var(--primary-soft); color: var(--primary-d); }
+.navlist a .ic { width: 18px; text-align: center; }
+
+.side-label {
+  font-size: 11px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: #97a1b2;
+  font-weight: 700;
+  padding: 0 4px;
+}
+.side-section { display: grid; gap: 8px; }
+
+.subj {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 10px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  color: var(--ink);
+  text-decoration: none;
+}
+.subj:hover { background: #eef1f6; }
+.subj__cnt {
+  font-size: 11.5px;
+  color: var(--muted);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 1px 7px;
+}
+
+.app__sidebar-footer { margin-top: auto; display: grid; gap: 8px; }
+.app__account { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.app__account form { margin: 0; }
+
+/* Bottom tab navigation — the mobile counterpart to the sidebar (hidden at
+   desktop widths, see the >=860px block above). 48px thumb targets with
+   safe-area padding (plan §9, §10). */
+.tabbar {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: var(--surface);
+  border-top: 1px solid var(--line);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+/* The Quiz tab is a button_to form; let its button take the grid slot. */
+.tabbar__form { display: contents; }
+.tabbar__link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 48px;
+  padding: 0.5rem;
+  color: var(--muted);
+  background: transparent;
+  border: none;
+  text-decoration: none;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.tabbar__link[aria-current="page"] { color: var(--primary-d); }
+.tabbar__link:focus-visible { outline: 3px solid var(--focus); outline-offset: -3px; }
+
+/* Mobile-only account menu (the desktop sidebar footer owns this >=860px). A
+   compact top-right cluster so Account/Sign out stay reachable without a tab. */
+.account-menu {
+  position: fixed;
+  top: max(0.6rem, env(safe-area-inset-top));
+  right: 0.6rem;
+  z-index: 40;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.account-menu form { margin: 0; }
+.account-menu__link,
+.account-menu__signout {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, .92);
+  backdrop-filter: blur(6px);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+.account-menu__link:hover,
+.account-menu__signout:hover { border-color: var(--primary); }
+
+@media (min-width: 860px) {
+  .account-menu { display: none; }
+}
+
+/* =============================================================================
+   Buttons
+   ============================================================================= */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 10px 16px;
+  text-decoration: none;
+  background: var(--surface);
+  color: var(--ink);
+  min-height: 44px;
+  line-height: 1.2;
+  font-family: inherit;
+}
+.btn:hover { border-color: var(--primary); }
+.btn.primary, .btn--primary {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+.btn.primary:hover, .btn--primary:hover { background: var(--primary-d); border-color: var(--primary-d); }
+.btn.ghost, .btn--ghost {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  color: var(--ink);
+}
+.btn--danger { color: var(--miss); border-color: var(--line); }
+.btn--danger:hover { border-color: var(--miss); }
+.btn.lg, .btn--lg { font-size: 17px; padding: 15px 26px; border-radius: 12px; min-height: 52px; }
+.btn.block, .btn--block { width: 100%; }
+.btn--small {
+  font-size: 13px;
+  padding: 7px 12px;
+  min-height: 36px;
+  border-radius: 9px;
+  font-weight: 600;
+}
+
+/* Bare submit/button inputs (forms that don't pass a class) default to the
+   primary button look so every action reads consistently. */
+input[type="submit"],
+button[type="submit"]:not(.btn):not(.grade):not(.cta):not(.tabbar__link):not(.account-menu__signout) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 10px 16px;
+  min-height: 44px;
+  background: var(--primary);
+  color: #fff;
+  font-family: inherit;
+  width: auto;
+}
+input[type="submit"]:hover,
+button[type="submit"]:not(.btn):not(.grade):not(.cta):not(.tabbar__link):not(.account-menu__signout):hover {
+  background: var(--primary-d);
+}
+
+/* =============================================================================
+   Cards
+   ============================================================================= */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px;
+}
+.card h3 {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 700;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+/* =============================================================================
+   Stage pills / chips — text + colour, never colour alone (a11y).
+   `.stage` is the helper output used across Library, quiz, and summaries.
+   ============================================================================= */
+.stage {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--muted);
+}
+.stage::before {
+  content: "";
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--st-new);
+  flex-shrink: 0;
+}
+.stage--new      { color: #5b6678; border-color: #d7dce5; }
+.stage--new::before      { background: var(--st-new); }
+.stage--learning { color: #a8620a; border-color: #f0d8b3; }
+.stage--learning::before { background: var(--st-learning); }
+.stage--young    { color: #0670a3; border-color: #bce5fb; }
+.stage--young::before    { background: var(--st-young); }
+.stage--maturing { color: #1d4ed8; border-color: #c5d4fb; }
+.stage--maturing::before { background: var(--st-maturing); }
+.stage--durable  { color: #15803d; border-color: #bbe7c6; }
+.stage--durable::before  { background: var(--st-durable); }
+
+/* =============================================================================
+   Forms (shared across authoring, account, classroom, admin)
+   ============================================================================= */
+.form {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+.field { margin-bottom: 0.85rem; }
+.field label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 0.3rem; }
+.field--inline { display: flex; align-items: center; gap: 0.5rem; }
+.field--inline label { margin-bottom: 0; }
+
+.field input[type="text"],
+.field input[type="email"],
+.field input[type="password"],
+.field textarea,
+.field select,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea,
+select {
+  width: 100%;
+  /* >=16px prevents iOS zoom-on-focus. */
+  font-size: 16px;
+  padding: 0.6rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  font-family: inherit;
+  background: var(--surface);
+  color: var(--ink);
+}
+.field--inline input[type="checkbox"] { width: auto; }
+
+.form__actions { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+
+.errors, .field-errors {
+  background: #fdecea;
+  border: 1px solid #f3c6c6;
+  color: var(--miss);
+  border-radius: 9px;
+  padding: 0.6rem 0.8rem;
+  margin-bottom: 0.85rem;
+  font-size: 0.9rem;
+}
+.errors ul { margin: 0.25rem 0 0; padding-left: 1.1rem; }
+.field__hint { font-size: 0.8rem; color: var(--muted); margin: 0.25rem 0 0; }
+
+/* =============================================================================
+   Tables (Library items, admin)
+   ============================================================================= */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+  background: var(--surface);
+}
+.data-table th {
+  text-align: left;
+  color: var(--muted);
+  font-size: 11.5px;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--line);
+  font-weight: 700;
+}
+.data-table td {
+  padding: 11px 10px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+.data-table tr:last-child td { border-bottom: none; }
+
+/* =============================================================================
+   Generic content page wrapper (Library, Progress, Account, classroom, admin)
+   ============================================================================= */
+.page {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 24px 20px calc(5rem + env(safe-area-inset-bottom));
+}
+@media (min-width: 860px) {
+  .page { padding-bottom: 2rem; }
+}
+.page__header { margin: 0.25rem 0 1.5rem; }
+.page__header h1 { font-size: 1.6rem; }
+.page__header .muted { margin-top: 0.4rem; }
+
+.breadcrumb { font-size: 0.9rem; margin-bottom: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
+.breadcrumb a { color: var(--primary); text-decoration: none; }
+.breadcrumb a:hover { text-decoration: underline; }
+.breadcrumb span { color: var(--muted); }
+
+.empty { color: var(--muted); margin-top: 0.75rem; }
+
+section + section { margin-top: 1.5rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { scroll-behavior: auto !important; }
+}

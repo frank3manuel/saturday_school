@@ -1,0 +1,11 @@
+<%# Stage legend — every bar segment is paired with a text label, never color
+    alone (a11y, plan §9). %>
+<ul class="legend" aria-label="What the stages mean">
+  <% MasteryStage::STAGES.each do |stage| %>
+    <li class="legend__item">
+      <span class="legend__swatch stage--<%= stage %>" aria-hidden="true"></span>
+      <span class="legend__label"><%= stage_label(stage) %></span>
+      <span class="muted small"><%= stage_description(stage) %></span>
+    </li>
+  <% end %>
+</ul>

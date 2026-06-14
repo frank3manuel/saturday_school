@@ -1,0 +1,69 @@
+<% content_for :title, "Admin · #{@user.email_address}" %>
+
+<main class="admin">
+  <nav class="breadcrumb">
+    <%= link_to "← All accounts", admin_users_path %>
+  </nav>
+
+  <header>
+    <h1><%= @user.email_address %></h1>
+    <p class="muted">Current role: <strong><%= @user.role.capitalize %></strong></p>
+  </header>
+
+  <section aria-labelledby="role-heading">
+    <h2 id="role-heading">Change role</h2>
+    <p class="muted">
+      Role changes take effect on the account's next request. Type the user's
+      email (<strong><%= @user.email_address %></strong>) to confirm.
+    </p>
+    <%= form_with url: admin_user_path(@user), method: :patch do |f| %>
+      <div class="field">
+        <%= f.label :role, "New role" %>
+        <%= f.select :role,
+              Admin::UsersController::ROLES.map { |r| [ r.capitalize, r ] },
+              selected: @user.role %>
+      </div>
+      <div class="field">
+        <%= f.label :confirm, "Confirm email" %>
+        <%= f.text_field :confirm, autocomplete: "off", autocapitalize: "none" %>
+      </div>
+      <%= f.submit "Change role" %>
+    <% end %>
+  </section>
+
+  <section aria-labelledby="delete-heading" class="admin__danger">
+    <h2 id="delete-heading">Delete account</h2>
+    <p class="muted">
+      Permanently deletes this account and all of its personal data. A teacher
+      with live cohorts can't be deleted until those are resolved. Type the
+      user's email to confirm.
+    </p>
+    <%= form_with url: admin_user_path(@user), method: :delete do |f| %>
+      <div class="field">
+        <%= f.label :confirm, "Confirm email" %>
+        <%= f.text_field :confirm, autocomplete: "off", autocapitalize: "none" %>
+      </div>
+      <%= f.submit "Delete account",
+            data: { turbo_confirm: "Permanently delete #{@user.email_address}?" } %>
+    <% end %>
+  </section>
+
+  <section aria-labelledby="history-heading">
+    <h2 id="history-heading">Audit history</h2>
+    <% if @audit_events.any? %>
+      <ul class="admin__audit">
+        <% @audit_events.each do |event| %>
+          <li>
+            <time datetime="<%= event.created_at.iso8601 %>"><%= event.created_at.to_fs(:short) %></time>
+            — <%= event.action.humanize %>
+            <%= " (#{event.detail_hash.map { |k, v| "#{k}: #{v}" }.join(", ")})" if event.detail_hash.any? %>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="muted">No recorded actions for this account.</p>
+    <% end %>
+  </section>
+</main>
+
+<%= render "shared/tabbar", active: :today %>

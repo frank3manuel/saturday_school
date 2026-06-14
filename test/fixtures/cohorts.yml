@@ -1,0 +1,12 @@
+# A cohort taught by `teacher`. Join code is fixed for join-by-code tests.
+cohort_one:
+  teacher: teacher
+  name: Period 1 Math
+  join_code: ABCDEFGHJK
+  description: First period math class
+
+# A second cohort owned by `other_teacher` — for the cross-teacher 404 matrix.
+other_cohort:
+  teacher: other_teacher
+  name: Other Teacher's Class
+  join_code: KJHGFEDCBA

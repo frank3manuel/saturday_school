@@ -1,0 +1,7 @@
+<%= turbo_stream.append "lessons" do %>
+  <%= render @lesson %>
+<% end %>
+
+<%= turbo_stream.update "new_lesson" do %>
+  <%= render "lessons/form", lesson: @subject.lessons.new, subject: @subject %>
+<% end %>

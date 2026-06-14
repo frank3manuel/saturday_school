@@ -1,0 +1,6 @@
+# `student` is an active member of teacher's cohort_one.
+student_in_cohort_one:
+  cohort: cohort_one
+  user: student
+  status: active
+  joined_at: <%= 3.days.ago %>

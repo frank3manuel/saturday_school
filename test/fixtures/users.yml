@@ -1,0 +1,45 @@
+# Password for both fixture users is "password" (≥8 chars). The digest is
+# computed at the test's bcrypt min cost so `authenticate`/`authenticate_by`
+# work in integration tests.
+<% digest = BCrypt::Password.create("password", cost: BCrypt::Engine::MIN_COST) %>
+
+# The primary signed-in user that M1–M4 tests operate as.
+owner:
+  email_address: owner@example.com
+  password_digest: <%= digest %>
+  role: student
+  verified_at: <%= 1.day.ago %>
+
+# A second student account, used by the cross-user 404 ownership tests (§12).
+other:
+  email_address: other@example.com
+  password_digest: <%= digest %>
+  role: student
+
+# A teacher who owns `cohort_one` and assigns `algebra` to it (M6 classroom).
+teacher:
+  email_address: teacher@example.com
+  password_digest: <%= digest %>
+  role: teacher
+  verified_at: <%= 1.day.ago %>
+
+# A SECOND teacher, owning nothing of teacher's — for the cross-teacher 404 matrix.
+other_teacher:
+  email_address: other_teacher@example.com
+  password_digest: <%= digest %>
+  role: teacher
+  verified_at: <%= 1.day.ago %>
+
+# An admin (the instance super-user). Manages accounts/roles, never content.
+admin:
+  email_address: admin@example.com
+  password_digest: <%= digest %>
+  role: admin
+  verified_at: <%= 1.day.ago %>
+
+# A student enrolled in teacher's cohort (the assigned-learner side of the hybrid).
+student:
+  email_address: student@example.com
+  password_digest: <%= digest %>
+  role: student
+  verified_at: <%= 1.day.ago %>

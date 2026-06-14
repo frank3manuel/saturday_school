@@ -1,0 +1,27 @@
+<%# Inline add form, lives in the "new_item" turbo frame above the table. %>
+<% url = item.persisted? ? item_path(item) : lesson_items_path(lesson) %>
+<%= form_with model: item, url: url, class: "form form--item" do |form| %>
+  <%= render "shared/errors", record: item %>
+
+  <div class="field">
+    <%= form.label :prompt %>
+    <%= form.text_area :prompt, rows: 2, autofocus: item.errors.any? %>
+  </div>
+
+  <div class="field">
+    <%= form.label :answer %>
+    <%= form.text_area :answer, rows: 2 %>
+  </div>
+
+  <div class="field field--inline">
+    <%= form.label :suspended %>
+    <%= form.check_box :suspended %>
+  </div>
+
+  <div class="form__actions">
+    <%= form.submit item.persisted? ? "Save item" : "Add item", class: "btn" %>
+    <% if item.persisted? %>
+      <%= link_to "Cancel", lesson_path(item.lesson), class: "btn btn--ghost" %>
+    <% end %>
+  </div>
+<% end %>
